@@ -5,6 +5,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\MapelController;
+use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('student', SiswaController::class);
     Route::resource('kelas', KelasController::class);
     Route::resource('mapel', MapelController::class);
+    Route::resource('room', RuanganController::class);
 });
 Route::middleware(['auth', 'user-access:guru'])->group(function () {
     Route::get('/dashboard-guru', [App\Http\Controllers\HomeController::class, 'guru'])->name('guru');

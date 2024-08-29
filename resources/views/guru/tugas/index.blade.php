@@ -1,5 +1,5 @@
-@extends('Partials.admin')
-@section('title', 'Guru Mapel Ruang')
+@extends('Partials.guru')
+@section('title', 'Materi')
 @section('content')
     <div class="main-body">
         <div class="page-wrapper">
@@ -10,7 +10,7 @@
                         <div class="page-header-title">
                             <i class="fa-solid fa-chalkboard-user bg-c-blue"></i>
                             <div class="d-inline">
-                                <h4>Guru Mapel Ruang</h4>
+                                <h4>Tugas</h4>
                             </div>
                         </div>
                     </div>
@@ -22,7 +22,9 @@
                                         <i class="icofont icofont-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Daftar Guru Mapel Ruang</a>
+                                <li class="breadcrumb-item"><a href="{{ route('tugas.index') }}">Daftar Mata Pelajaran</a>
+                                </li>
+                                <li class="breadcrumb-item"><a href="#!">{{ $room->mapel }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -36,10 +38,8 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('room.create') }}" class="btn btn-primary btn-sm"><i
+                                <a href="{{ url('tugas/create/' . $room->id) }}" class="btn btn-primary btn-sm"><i
                                         class="ti-plus mr-2"></i>Tambah</a>
-                                <a href="#" class="btn btn-success btn-sm"><i
-                                        class="fa-solid fa-file-import mr-2"></i>Import</a>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option" style="width: 35px;">
                                         <li class=""><i class="icofont icofont-simple-left"></i></li>
@@ -55,10 +55,10 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Guru</th>
-                                            <th>Mapel</th>
-                                            <th>Kelas</th>
-                                            <th>Tahun Ajaran</th>
+                                            <th>Judul</th>
+                                            <th>File</th>
+                                            <th>KKM</th>
+                                            <th>Deadline</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -66,21 +66,22 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->guru }}</td>
-                                                <td>{{ $item->mapel }}</td>
-                                                <td>
-                                                    @foreach (explode(', ', $item->kelas) as $kelas)
-                                                        <span class="bg-primary p-2 rounded">{{ $kelas }}</span>
-                                                    @endforeach
+                                                <td>{{ $item->judul }}</td>
+                                                <td> <!-- Button trigger modal -->
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        data-toggle="modal" data-target="#exampleModal{{ $item->id }}">
+                                                        View
+                                                    </button>
                                                 </td>
-                                                <td>{{ $item->tahun }}</td>
+                                                <td>{{ $item->kkm }}</td>
+                                                <td>{{ $item->deadline }}</td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="{{ route('room.edit', $item->id) }}"
+                                                        <a href="{{ url("tugas/{$item->id}/edit/{$room->id}") }}"
                                                             class="btn btn-info btn-sm">Edit</a>
                                                         &nbsp;
-                                                        <form action="{{ route('room.destroy', $item->id) }}" method="post"
-                                                            class="ms-2" enctype="multipart/form-data">
+                                                        <form action="{{ url("tugas/{$item->id}/destroy/{$room->id}") }}"
+                                                            method="post" class="ms-2" enctype="multipart/form-data">
                                                             @csrf
                                                             @method('delete')
                                                             <button type="submit"
@@ -92,6 +93,31 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @foreach ($data as $item)
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal{{ $item->id }}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Detail Materi</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <iframe src="{{ asset('files/tugas/' . $item->file) }}" frameborder="0"
+                                                        style="width: 100%" height="600px"></iframe>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

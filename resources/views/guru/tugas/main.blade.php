@@ -1,5 +1,5 @@
-@extends('Partials.admin')
-@section('title', 'Guru Mapel Ruang')
+@extends('Partials.guru')
+@section('title', 'Tugas')
 @section('content')
     <div class="main-body">
         <div class="page-wrapper">
@@ -10,7 +10,7 @@
                         <div class="page-header-title">
                             <i class="fa-solid fa-chalkboard-user bg-c-blue"></i>
                             <div class="d-inline">
-                                <h4>Guru Mapel Ruang</h4>
+                                <h4>Mata Pelajaran</h4>
                             </div>
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                                         <i class="icofont icofont-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Daftar Guru Mapel Ruang</a>
+                                <li class="breadcrumb-item"><a href="#!">Daftar Mata Pelajaran</a>
                                 </li>
                             </ul>
                         </div>
@@ -36,10 +36,6 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('room.create') }}" class="btn btn-primary btn-sm"><i
-                                        class="ti-plus mr-2"></i>Tambah</a>
-                                <a href="#" class="btn btn-success btn-sm"><i
-                                        class="fa-solid fa-file-import mr-2"></i>Import</a>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option" style="width: 35px;">
                                         <li class=""><i class="icofont icofont-simple-left"></i></li>
@@ -70,23 +66,14 @@
                                                 <td>{{ $item->mapel }}</td>
                                                 <td>
                                                     @foreach (explode(', ', $item->kelas) as $kelas)
-                                                        <span class="bg-primary p-2 rounded">{{ $kelas }}</span>
+                                                        <span
+                                                            class="bg-primary py-1 px-2 rounded">{{ $kelas }}</span>
                                                     @endforeach
                                                 </td>
                                                 <td>{{ $item->tahun }}</td>
                                                 <td>
-                                                    <div class="d-flex">
-                                                        <a href="{{ route('room.edit', $item->id) }}"
-                                                            class="btn btn-info btn-sm">Edit</a>
-                                                        &nbsp;
-                                                        <form action="{{ route('room.destroy', $item->id) }}" method="post"
-                                                            class="ms-2" enctype="multipart/form-data">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit"
-                                                                class="btn btn-danger btn-sm">Hapus</button>
-                                                        </form>
-                                                    </div>
+                                                    <a href="{{ url("tugas/show/{$item->id}") }}"
+                                                        class="btn btn-info btn-sm">Tugas</a>
                                                 </td>
                                             </tr>
                                         @endforeach

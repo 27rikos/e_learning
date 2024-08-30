@@ -51,7 +51,6 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Guru</th>
                                             <th>Mapel</th>
                                             <th>Kelas</th>
                                             <th>Tahun Ajaran</th>
@@ -62,7 +61,6 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->guru }}</td>
                                                 <td>{{ $item->mapel }}</td>
                                                 <td>
                                                     @foreach (explode(', ', $item->kelas) as $kelas)

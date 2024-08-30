@@ -38,8 +38,6 @@
                             <div class="card-header">
                                 <a href="{{ route('room.create') }}" class="btn btn-primary btn-sm"><i
                                         class="ti-plus mr-2"></i>Tambah</a>
-                                <a href="#" class="btn btn-success btn-sm"><i
-                                        class="fa-solid fa-file-import mr-2"></i>Import</a>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option" style="width: 35px;">
                                         <li class=""><i class="icofont icofont-simple-left"></i></li>

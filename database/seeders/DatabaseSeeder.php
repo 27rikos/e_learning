@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kelas;
+use App\Models\Mapel;
+use App\Models\TahunAjaran;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -35,5 +38,17 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('budi1234'),
             'role' => 'siswa',
         ]);
+        TahunAjaran::create([
+            'tahun' => '2021/2022',
+            'gelombang' => 'Pertama',
+        ]);
+        Kelas::create([
+            'kelas' => 'X-1',
+            'keterangan' => 'rest',
+        ]);
+        Mapel::create([
+            'mapel' => 'Penjas',
+        ]);
+
     }
 }

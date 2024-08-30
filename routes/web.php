@@ -2,14 +2,19 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\JawabanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\MateriOnSiswaController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\SubmitController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\TugasController;
+use App\Http\Controllers\TugasOnSiswaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -52,10 +57,31 @@ Route::middleware(['auth', 'user-access:guru'])->group(function () {
     Route::get('tugas/{id}/edit/{tugas_id}', [TugasController::class, 'edit']);
     Route::put('tugas/{id}/update/{tugas_id}', [TugasController::class, 'update']);
     Route::delete('tugas/{id}/destroy/{tugas_id}', [TugasController::class, 'destroy']);
+    Route::get('quiz/index', [QuizController::class, 'index'])->name('quiz.index');
+    Route::get('quiz/show/{id}', [QuizController::class, 'show']);
+    Route::get('quiz/create/{id}', [QuizController::class, 'create']);
+    Route::post('quiz/store/{id}', [QuizController::class, 'store']);
+    Route::get('quiz/{id}/edit/{kuis_id}', [QuizController::class, 'edit']);
+    Route::put('quiz/{id}/update/{kuis_id}', [QuizController::class, 'update']);
+    Route::delete('quiz/{id}/destroy/{kuis_id}', [QuizController::class, 'destroy']);
+    Route::get('submit/mapel', [SubmitController::class, 'index'])->name('submit.index');
+    Route::get('submit/show/{id}', [SubmitController::class, 'show'])->name('submit.show');
+    Route::put('submit/update/{id}', [SubmitController::class, 'update'])->name('submit.update');
+    Route::delete('submit/destroy/{id}', [SubmitController::class, 'destroy'])->name('submit.destroy');
+    Route::get('quiz-answer', [QuizController::class, 'mapel'])->name('kuis');
+    Route::get('quiz-answer/check/{id}', [QuizController::class, 'check']);
+
 });
 
 Route::middleware(['auth', 'user-access:siswa'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('materi', [MateriOnSiswaController::class, 'index'])->name('siswa.index');
+    Route::get('materi-siswa/show/{id}', [MateriOnSiswaController::class, 'show'])->name('siswa.show');
+    Route::get('tugas', [TugasOnSiswaController::class, 'index'])->name('tugas');
+    Route::post('tugas/upload', [TugasOnSiswaController::class, 'store'])->name('tugas-submit');
+    Route::get('kuis/mapel', [JawabanController::class, 'index'])->name('jawaban');
+    Route::get('kuis/show/{id}', [JawabanController::class, 'show']);
+    Route::post('kuis/store/{id}', [JawabanController::class, 'store']);
 
 });
 

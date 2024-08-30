@@ -9,4 +9,14 @@ class Examp extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function tugas()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_tugas');
+    }
+
+    public function examp()
+    {
+        return $this->hasMany(Submit_examp::class, 'id_tugas');
+    }
 }

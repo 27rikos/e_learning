@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
+use App\Models\User;
+
 class HomeController extends Controller
 {
     /**
@@ -22,14 +25,26 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('siswa.dashboard.index');
+        $guru = User::where('role', 'guru')->count(); // Menghitung jumlah pengguna dengan peran 'guru'
+        $siswa = User::where('role', 'siswa')->count(); // Menghitung jumlah pengguna dengan peran 'siswa'
+        $kelas = Kelas::count(); // Menghitung jumlah kelas
+
+        return view('siswa.dashboard.index', compact('guru', 'siswa', 'kelas')); // Menyertakan 'kelas' ke dalam compact
     }
+
     public function admin()
     {
-        return view('admin.dashboard.index');
+        $guru = User::where('role', 'guru')->count(); // Menghitung jumlah pengguna dengan peran 'guru'
+        $siswa = User::where('role', 'siswa')->count(); // Menghitung jumlah pengguna dengan peran 'siswa'
+        $kelas = Kelas::count(); // Menghitung jumlah kelas
+
+        return view('admin.dashboard.index', compact('guru', 'siswa', 'kelas'));
     }
     public function guru()
     {
-        return view('guru.dashboard.index');
+        $guru = User::where('role', 'guru')->count(); // Menghitung jumlah pengguna dengan peran 'guru'
+        $siswa = User::where('role', 'siswa')->count(); // Menghitung jumlah pengguna dengan peran 'siswa'
+        $kelas = Kelas::count();
+        return view('guru.dashboard.index', compact('guru', 'siswa', 'kelas'));
     }
 }

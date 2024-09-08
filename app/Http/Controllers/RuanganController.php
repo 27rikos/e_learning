@@ -131,8 +131,10 @@ class RuanganController extends Controller
      * @param  \App\Models\Ruangan  $ruangan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ruangan $ruangan)
+    public function destroy($id)
     {
-        //
+        $data = Ruangan::findOrFail($id);
+        $data->delete();
+        return redirect()->route('room.index')->with('success', 'Data deleted successfully.');
     }
 }

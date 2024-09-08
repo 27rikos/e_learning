@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\MataPelajaran;
 use App\Models\Mapel;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MapelController extends Controller
 {
@@ -39,6 +41,7 @@ class MapelController extends Controller
     {
         $this->validate($request, [
             'mapel' => 'required',
+            'keterangan' => 'required',
         ]);
         $data = Mapel::create($request->all());
         $data->save();
@@ -94,5 +97,31 @@ class MapelController extends Controller
         $data = Mapel::findOrFail($id);
         $data->delete();
         return redirect()->route('mapel.index')->with('success', 'Data Dihapus');
+    }
+
+    public function imports(Request $request)
+    {
+        // Validate the uploaded file
+        $this->validate($request, rules: [
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ],
+            messages: [
+                'file.required' => 'file belum di upload',
+                'file.mimes' => 'format file harus Excel',
+                'file.max' => 'Ukuran Maksimal file 2MB',
+
+            ]
+        );
+
+        // Handle the uploaded file
+        $file = $request->file('file');
+
+        // Move the file to a temporary location (optional)
+        $filePath = $file->storeAs('temp', $file->getClientOriginalName());
+
+        // Import the data from the Excel file
+        Excel::import(new MataPelajaran, $filePath);
+
+        return redirect()->back()->with('toast_success', 'Data imported successfully.');
     }
 }

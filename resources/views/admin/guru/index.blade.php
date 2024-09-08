@@ -38,6 +38,36 @@
                             <div class="card-header">
                                 <a href="{{ route('teacher.create') }}" class="btn btn-primary btn-sm"><i
                                         class="ti-plus mr-2"></i>Tambah</a>
+                                <!-- Button trigger modal -->
+                                <a href="#" class="btn btn-success btn-sm"data-toggle="modal"
+                                    data-target="#exampleModal">Imports</a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Import Guru</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form action="{{ url('imports-guru') }}" method="POST"
+                                                enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="modal-body">
+                                                    <input type="file" name="file" class="form-control">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option" style="width: 35px;">
                                         <li class=""><i class="icofont icofont-simple-left"></i></li>
@@ -59,6 +89,7 @@
                                             <th>Tempat Lahir</th>
                                             <th>Tanggal Lahir</th>
                                             <th>Agama</th>
+                                            <th>Pendidikan</th>
                                             <th>Jabatan</th>
                                             <th>Telepon</th>
                                             <th>E-Mail</th>
@@ -77,6 +108,7 @@
                                                 <td>{{ $item->tempat_lhr }}</td>
                                                 <td>{{ $item->tanggal_lhr }}</td>
                                                 <td>{{ $item->agama }}</td>
+                                                <td>{{ $item->pendidikan }}</td>
                                                 <td>{{ $item->jabatan }}</td>
                                                 <td>{{ $item->hp }}</td>
                                                 <td>{{ $item->email }}</td>

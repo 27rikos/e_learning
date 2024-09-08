@@ -60,6 +60,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Keterangan</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="keterangan" id="" cols="30" rows="10" class="form-control">{{ $data->keterangan }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <div class="col-sm-2"></div>
                                         <div class="col-sm-10"><button class="btn btn-primary btn-sm"
                                                 type="submit">Simpan</button></div>

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuruController extends Controller
 {
@@ -48,6 +50,7 @@ class GuruController extends Controller
             'jabatan' => 'required',
             'alamat' => 'required',
             'hp' => 'required',
+            'pendidikan' => 'required',
             'email' => 'required',
             'file' => 'required|file|mimes:jpg,jpeg,png|max:2048', // Validation for file upload
             'password' => 'required',
@@ -66,6 +69,7 @@ class GuruController extends Controller
             'alamat' => $request->alamat,
             'role' => $roles,
             'hp' => $request->hp,
+            'pendidikan' => $request->pendidikan,
             'email' => $request->email,
             'password' => Hash::make($request->password), // Hash the password for security
         ]);
@@ -131,6 +135,7 @@ class GuruController extends Controller
             'jabatan' => 'required',
             'alamat' => 'required',
             'hp' => 'required',
+            'pendidikan' => 'required',
             'email' => 'required|email',
             'file' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
@@ -146,6 +151,7 @@ class GuruController extends Controller
             'jabatan' => $request->jabatan,
             'alamat' => $request->alamat,
             'hp' => $request->hp,
+            'pendidikan' => $request->pendidikan,
             'email' => $request->email,
         ];
 
@@ -198,5 +204,30 @@ class GuruController extends Controller
         $data->delete();
 
         return redirect()->route('teacher.index')->with('success', 'Data deleted successfully');
+    }
+    public function imports(Request $request)
+    {
+        // Validate the uploaded file
+        $this->validate($request, rules: [
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ],
+            messages: [
+                'file.required' => 'file belum di upload',
+                'file.mimes' => 'format file harus Excel',
+                'file.max' => 'Ukuran Maksimal file 2MB',
+
+            ]
+        );
+
+        // Handle the uploaded file
+        $file = $request->file('file');
+
+        // Move the file to a temporary location (optional)
+        $filePath = $file->storeAs('temp', $file->getClientOriginalName());
+
+        // Import the data from the Excel file
+        Excel::import(new Teacher, $filePath);
+
+        return redirect()->back()->with('toast_success', 'Data imported successfully.');
     }
 }

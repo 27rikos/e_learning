@@ -15,10 +15,17 @@ return new class extends Migration
     {
         Schema::create('materis', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->text('file');
-            $table->date('tanggal');
-            $table->foreignId('id_materi')->constrained('ruangans')->cascadeOnDelete();
+            $table->text('materi'); // Judul materi
+            $table->foreignId('id_materi')->constrained('ruangans')->cascadeOnDelete(); // Relasi dengan tabel ruangans
+            // Kolom untuk kuis
+            $table->text('pertanyaan')->nullable(); // Pertanyaan kuis
+            $table->string('pilihan_a')->nullable(); // Pilihan A
+            $table->string('pilihan_b')->nullable(); // Pilihan B
+            $table->string('pilihan_c')->nullable(); // Pilihan C
+            $table->string('pilihan_d')->nullable(); // Pilihan D
+            $table->string('pilihan_e')->nullable(); // Pilihan E
+            $table->string('kunci_jawaban')->nullable(); // Kunci jawaban
+
             $table->timestamps();
         });
     }

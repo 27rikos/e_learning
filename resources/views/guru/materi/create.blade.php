@@ -3,7 +3,6 @@
 @section('content')
     <div class="main-body">
         <div class="page-wrapper">
-            <!-- Page-header start -->
             <div class="page-header card">
                 <div class="row align-items-end">
                     <div class="col-lg-8">
@@ -34,7 +33,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Page-header end -->
 
             <div class="page-body">
                 <div class="row">
@@ -52,32 +50,84 @@
                                 </div>
                             </div>
                             <div class="card-block">
-                                <form action="{{ url('materi/store/' . $room->id) }}" method="POST"
-                                    enctype="multipart/form-data">
+                                <form action="{{ url('materi/store/' . $room->id) }}" method="POST">
                                     @csrf
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Judul Materi</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="judul">
+
+                                    <div id="form-container">
+                                        <div class="form-section">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Materi 1</label>
+                                                <div class="col-sm-10">
+                                                    <input id="materi_1" type="hidden" name="materi[]">
+                                                    <trix-editor input="materi_1"></trix-editor>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pertanyaan Kuis 1</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control" name="pertanyaan[]"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pilihan A</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="pilihan_a[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pilihan B</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="pilihan_b[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pilihan C</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="pilihan_c[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pilihan D</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="pilihan_d[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Pilihan E</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="pilihan_e[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Kunci Jawaban</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" name="kunci_jawaban[]">
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                        <option value="D">D</option>
+                                                        <option value="E">E</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <hr> <!-- Pembatas antara materi -->
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">File Materi</label>
-                                        <div class="col-sm-10">
-                                            <input type="file" class="form-control" name="file" accept=".pdf">
+                                        <div class="col-sm-12">
+                                            <button type="button" id="add-section" class="btn btn-primary">+ Tambah Materi
+                                                dan Kuis</button>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Tanggal</label>
-                                        <div class="col-sm-10">
-                                            <input type="date" class="form-control" name="tanggal">
-                                        </div>
-                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-sm-2"></div>
-                                        <div class="col-sm-10"><button class="btn btn-primary btn-sm"
-                                                type="submit">Simpan</button></div>
+                                        <div class="col-sm-10">
+                                            <button class="btn btn-primary btn-sm" type="submit">Simpan</button>
+                                        </div>
                                     </div>
+
                                 </form>
                             </div>
                         </div>
@@ -86,4 +136,76 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let sectionCount = 1;
+
+        function addFormSection() {
+            sectionCount++;
+            const formContainer = document.getElementById('form-container');
+            const newId = 'materi_' + sectionCount;
+            formContainer.innerHTML += `
+                <div class="form-section">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Materi ${sectionCount}</label>
+                        <div class="col-sm-10">
+                            <input id="${newId}" type="hidden" name="materi[]">
+                            <trix-editor input="${newId}"></trix-editor>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pertanyaan Kuis ${sectionCount}</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" name="pertanyaan[]"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pilihan A</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="pilihan_a[]">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pilihan B</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="pilihan_b[]">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pilihan C</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="pilihan_c[]">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pilihan D</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="pilihan_d[]">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Pilihan E</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="pilihan_e[]">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Kunci Jawaban</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="kunci_jawaban[]">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr> <!-- Pembatas antar materi -->
+                </div>
+            `;
+        }
+
+        document.getElementById('add-section').addEventListener('click', addFormSection);
+    </script>
 @endsection

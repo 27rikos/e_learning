@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
         ]);
         Mapel::create([
             'mapel' => 'Penjas',
+            'keterangan' => 'umum',
         ]);
 
     }

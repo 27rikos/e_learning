@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\Students;
 use App\Models\Kelas;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
@@ -40,7 +42,7 @@ class SiswaController extends Controller
     {
         // Add validation for required fields
         $request->validate([
-            'nis' => 'required',
+            'nik' => 'required',
             'name' => 'required',
             'tempat_lhr' => 'required',
             'tanggal_lhr' => 'required|date',
@@ -66,7 +68,7 @@ class SiswaController extends Controller
 
         // Create new student
         $user = User::create([
-            'nis' => $request->nis,
+            'nik' => $request->nik,
             'name' => $request->name,
             'tempat_lhr' => $request->tempat_lhr,
             'tanggal_lhr' => $request->tanggal_lhr,
@@ -119,7 +121,7 @@ class SiswaController extends Controller
     {
         // Add validation for required fields
         $request->validate([
-            'nis' => 'required',
+            'nik' => 'required',
             'name' => 'required',
             'tempat_lhr' => 'required',
             'tanggal_lhr' => 'required|date',
@@ -154,7 +156,7 @@ class SiswaController extends Controller
 
         // Update user data
         $user->update([
-            'nis' => $request->nis,
+            'nik' => $request->nik,
             'name' => $request->name,
             'tempat_lhr' => $request->tempat_lhr,
             'tanggal_lhr' => $request->tanggal_lhr,
@@ -194,6 +196,32 @@ class SiswaController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('student.index')->with('success', 'Student deleted successfully.');
+    }
+
+    public function imports(Request $request)
+    {
+        // Validate the uploaded file
+        $this->validate($request, rules: [
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ],
+            messages: [
+                'file.required' => 'file belum di upload',
+                'file.mimes' => 'format file harus Excel',
+                'file.max' => 'Ukuran Maksimal file 2MB',
+
+            ]
+        );
+
+        // Handle the uploaded file
+        $file = $request->file('file');
+
+        // Move the file to a temporary location (optional)
+        $filePath = $file->storeAs('temp', $file->getClientOriginalName());
+
+        // Import the data from the Excel file
+        Excel::import(new Students, $filePath);
+
+        return redirect()->back()->with('toast_success', 'Data imported successfully.');
     }
 
 }

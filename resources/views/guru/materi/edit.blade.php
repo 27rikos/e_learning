@@ -1,5 +1,5 @@
 @extends('Partials.guru')
-@section('title', 'Materi')
+@section('title', 'Edit Materi')
 @section('content')
     <div class="main-body">
         <div class="page-wrapper">
@@ -10,7 +10,7 @@
                         <div class="page-header-title">
                             <i class="fa-solid fa-chalkboard-user bg-c-blue"></i>
                             <div class="d-inline">
-                                <h4>Materi</h4>
+                                <h4>Edit Materi</h4>
                             </div>
                         </div>
                     </div>
@@ -52,34 +52,80 @@
                                 </div>
                             </div>
                             <div class="card-block">
-                                <form action="{{ url("materi/{$data->id}/update/{$room->id}") }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @method('put')
+                                <form action="{{ url("materi/{$data->id}/update/{$room->id}") }}" method="POST">
                                     @csrf
+                                    @method('PUT')
+
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Judul Materi</label>
+                                        <label class="col-sm-2 col-form-label">Materi</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="judul"
-                                                value="{{ $data->judul }}">
+                                            <input type="text" class="form-control" name="materi"
+                                                value="{{ old('materi', $data->materi) }}" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">File Materi</label>
+                                        <label class="col-sm-2 col-form-label">Pertanyaan</label>
                                         <div class="col-sm-10">
-                                            <input type="file" class="form-control" name="file" accept=".pdf">
+                                            <textarea class="form-control" name="pertanyaan">{{ old('pertanyaan', $data->pertanyaan) }}</textarea>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Tanggal</label>
+                                        <label class="col-sm-2 col-form-label">Pilihan A</label>
                                         <div class="col-sm-10">
-                                            <input type="date" class="form-control" name="tanggal"
-                                                value="{{ $data->tanggal }}">
+                                            <input type="text" class="form-control" name="pilihan_a"
+                                                value="{{ old('pilihan_a', $data->pilihan_a) }}">
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Pilihan B</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pilihan_b"
+                                                value="{{ old('pilihan_b', $data->pilihan_b) }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Pilihan C</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pilihan_c"
+                                                value="{{ old('pilihan_c', $data->pilihan_c) }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Pilihan D</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pilihan_d"
+                                                value="{{ old('pilihan_d', $data->pilihan_d) }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Pilihan E</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pilihan_e"
+                                                value="{{ old('pilihan_e', $data->pilihan_e) }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Kunci Jawaban</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="kunci_jawaban"
+                                                value="{{ old('kunci_jawaban', $data->kunci_jawaban) }}">
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-sm-2"></div>
-                                        <div class="col-sm-10"><button class="btn btn-primary btn-sm"
-                                                type="submit">Simpan</button></div>
+                                        <div class="col-sm-10">
+                                            <button class="btn btn-primary btn-sm" type="submit">Simpan</button>
+                                            <a href="{{ url("materi/show/{$room->id}") }}"
+                                                class="btn btn-secondary btn-sm">Batal</a>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

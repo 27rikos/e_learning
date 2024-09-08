@@ -1,28 +1,23 @@
 @extends('Partials.siswa')
-@section('title', 'Materi')
+@section('title', 'Materi dan Kuis')
 @section('content')
     <style>
-        .modal-fullscreen {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            max-width: 100%;
+        .slide {
+            display: none;
         }
 
-        .modal-content {
-            height: 100%;
-            border: 0;
-            border-radius: 0;
+        .active {
+            display: block;
         }
 
-        .modal-body {
-            overflow-y: auto;
+        .card-body-custom {
+            padding: 2rem;
+            /* Adjust padding as needed */
         }
 
-        .modal-header,
-        .modal-footer {
-            border: none;
+        .button-group {
+            margin-top: 1rem;
+            /* Space above the buttons */
         }
     </style>
     <div class="main-body">
@@ -34,7 +29,7 @@
                         <div class="page-header-title">
                             <i class="fa-solid fa-chalkboard-user bg-c-blue"></i>
                             <div class="d-inline">
-                                <h4>Materi</h4>
+                                <h4>Materi dan Kuis</h4>
                             </div>
                         </div>
                     </div>
@@ -48,8 +43,7 @@
                                 </li>
                                 <li class="breadcrumb-item"><a href="{{ url('materi/index') }}">Daftar Mata Pelajaran</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">{{ $room->mapel }}</a>
-                                </li>
+                                <li class="breadcrumb-item"><a href="#!">{{ $room->mapel }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -58,71 +52,133 @@
             <!-- Page-header end -->
 
             <div class="page-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-header-right">
-                                    <ul class="list-unstyled card-option" style="width: 35px;">
-                                        <li class=""><i class="icofont icofont-simple-left"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card"></i></li>
-                                        <li><i class="icofont icofont-error close-card"></i></li>
-                                    </ul>
+                <div class="container mt-5">
+                    @php
+                        // Create an array of slides for display
+                        $slides = [];
+                        foreach ($data as $item) {
+                            // Add materi slide
+                            $slides[] = [
+                                'type' => 'materi',
+                                'id' => $item->id,
+                                'content' => $item->materi,
+                            ];
+                            // Add quiz slide if it has questions
+                            if (!is_null($item->pertanyaan)) {
+                                $slides[] = [
+                                    'type' => 'quiz',
+                                    'id' => $item->id,
+                                    'pertanyaan' => $item->pertanyaan,
+                                    'pilihan_a' => $item->pilihan_a,
+                                    'pilihan_b' => $item->pilihan_b,
+                                    'pilihan_c' => $item->pilihan_c,
+                                    'pilihan_d' => $item->pilihan_d,
+                                    'pilihan_e' => $item->pilihan_e,
+                                    'kunci_jawaban' => $item->kunci_jawaban,
+                                ];
+                            }
+                        }
+                    @endphp
+
+                    @foreach ($slides as $key => $slide)
+                        <div class="slide {{ $key === 0 ? 'active' : '' }}" id="slide{{ $key + 1 }}">
+                            <div class="card mb-3">
+                                <div class="card-body card-body-custom">
+                                    @if ($slide['type'] === 'materi')
+                                        <h5 class="card-title">Materi {{ $key + 1 }}</h5>
+                                        <p class="card-text">{!! $slide['content'] !!}</p>
+                                        <div class="button-group">
+                                            <button class="btn btn-primary" onclick="nextSlide()">Next</button>
+                                        </div>
+                                    @elseif ($slide['type'] === 'quiz')
+                                        <h5 class="card-title">Kuis {{ $key }}</h5>
+                                        <p class="card-text">Pertanyaan: {{ $slide['pertanyaan'] }}</p>
+                                        <div>
+                                            @if ($slide['pilihan_a'])
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="quiz{{ $key }}" value="A">
+                                                    <label class="form-check-label">{{ $slide['pilihan_a'] }}</label>
+                                                </div>
+                                            @endif
+                                            @if ($slide['pilihan_b'])
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="quiz{{ $key }}" value="B">
+                                                    <label class="form-check-label">{{ $slide['pilihan_b'] }}</label>
+                                                </div>
+                                            @endif
+                                            @if ($slide['pilihan_c'])
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="quiz{{ $key }}" value="C">
+                                                    <label class="form-check-label">{{ $slide['pilihan_c'] }}</label>
+                                                </div>
+                                            @endif
+                                            @if ($slide['pilihan_d'])
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="quiz{{ $key }}" value="D">
+                                                    <label class="form-check-label">{{ $slide['pilihan_d'] }}</label>
+                                                </div>
+                                            @endif
+                                            @if ($slide['pilihan_e'])
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="quiz{{ $key }}" value="E">
+                                                    <label class="form-check-label">{{ $slide['pilihan_e'] }}</label>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="button-group">
+                                            <span id="result{{ $key }}"></span>
+                                            <button class="btn btn-primary" onclick="prevSlide()">Previous</button>
+                                            <button class="btn btn-primary"
+                                                onclick="checkMultipleChoice({{ $key }}, '{{ $slide['kunci_jawaban'] }}')">Next</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="card-block">
-                                <table id="example" class="table table-borderless" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Judul</th>
-                                            <th>Tanggal</th>
-                                            <th>File</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->judul }}</td>
-                                                <td>{{ $item->tanggal }}</td>
-                                                <td> <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        data-toggle="modal" data-target="#exampleModal{{ $item->id }}">
-                                                        View
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @foreach ($data as $item)
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal{{ $item->id }}" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div
-                                            class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <iframe src="{{ asset('files/materi/' . $item->file) }}" frameborder="0"
-                                                        style="width: 100%;" height="100%"></iframe>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary">Kuis</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = {{ count($slides) }};
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                document.getElementById(`slide${currentSlide}`).classList.remove('active');
+                currentSlide++;
+                document.getElementById(`slide${currentSlide}`).classList.add('active');
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                document.getElementById(`slide${currentSlide}`).classList.remove('active');
+                currentSlide--;
+                document.getElementById(`slide${currentSlide}`).classList.add('active');
+            }
+        }
+
+        function checkMultipleChoice(quizNumber, correctAnswer) {
+            const selectedAnswer = document.querySelector(`input[name="quiz${quizNumber}"]:checked`);
+            const resultElement = document.getElementById(`result${quizNumber}`);
+            if (selectedAnswer) {
+                if (selectedAnswer.value === correctAnswer) {
+                    resultElement.innerHTML = '<span class="text-success">Jawaban benar!</span>';
+                    nextSlide();
+                } else {
+                    resultElement.innerHTML = '<span class="text-danger">Jawaban salah, coba lagi!</span>';
+                }
+            } else {
+                resultElement.innerHTML = '<span class="text-warning">Pilih jawaban terlebih dahulu!</span>';
+            }
+        }
+    </script>
 @endsection

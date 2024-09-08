@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Materi;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MateriController extends Controller
 {
@@ -27,34 +28,47 @@ class MateriController extends Controller
     }
     public function store(Request $request, $id)
     {
-        // Validate form data
+        // Validasi data form
         $this->validate($request, [
-            'judul' => 'required',
-            'tanggal' => 'required',
-            'file' => 'required|file|mimes:pdf|max:2048', // Ensure the file is a PDF
+            'materi.*' => 'required|string',
+            'pertanyaan.*' => 'required|string',
+            'pilihan_a.*' => 'required|string',
+            'pilihan_b.*' => 'required|string',
+            'pilihan_c.*' => 'required|string',
+            'pilihan_d.*' => 'required|string',
+            'pilihan_e.*' => 'nullable|string',
+            'kunci_jawaban.*' => 'required|string',
         ]);
 
-        // Initialize filename variable
-        $fileName = null;
+        // Iterasi untuk menyimpan materi dan kuis
+        $materiData = $request->only([
+            'materi',
+            'pertanyaan',
+            'pilihan_a',
+            'pilihan_b',
+            'pilihan_c',
+            'pilihan_d',
+            'pilihan_e',
+            'kunci_jawaban',
+        ]);
 
-        // Handle file upload
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+        $materiCount = count($materiData['materi']);
 
-            // Move the file to the 'files/materi/' directory
-            $file->move(public_path('files/materi/'), $fileName);
-
-            // Note: Do not store the full path in the database, only the filename
+        for ($i = 0; $i < $materiCount; $i++) {
+            DB::table('materis')->insert([
+                'id_materi' => $id, // Pastikan ini adalah ID yang sesuai
+                'materi' => $materiData['materi'][$i],
+                'pertanyaan' => $materiData['pertanyaan'][$i],
+                'pilihan_a' => $materiData['pilihan_a'][$i],
+                'pilihan_b' => $materiData['pilihan_b'][$i],
+                'pilihan_c' => $materiData['pilihan_c'][$i],
+                'pilihan_d' => $materiData['pilihan_d'][$i],
+                'pilihan_e' => $materiData['pilihan_e'][$i] ?? null, // Optional
+                'kunci_jawaban' => $materiData['kunci_jawaban'][$i],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        // Create a new Materi record
-        Materi::create([
-            'id_materi' => $id,
-            'judul' => $request->input('judul'),
-            'file' => $fileName,
-            'tanggal' => $request->input('tanggal'),
-        ]);
 
         // Redirect to the show page with a success message
         return redirect('materi/show/' . $id)->with('success', 'Materi Ditambahkan');
@@ -70,9 +84,14 @@ class MateriController extends Controller
     {
         // Validate form data
         $this->validate($request, [
-            'judul' => 'required',
-            'tanggal' => 'required|date',
-            'file' => 'nullable|file|mimes:pdf|max:2048', // File is optional and must be a PDF
+            'materi' => 'required|string',
+            'pertanyaan' => 'nullable|string',
+            'pilihan_a' => 'nullable|string',
+            'pilihan_b' => 'nullable|string',
+            'pilihan_c' => 'nullable|string',
+            'pilihan_d' => 'nullable|string',
+            'pilihan_e' => 'nullable|string',
+            'kunci_jawaban' => 'nullable|string',
         ]);
 
         // Find the Materi record by its ID
@@ -80,33 +99,21 @@ class MateriController extends Controller
 
         // Prepare the update data
         $updateData = [
-            'judul' => $request->input('judul'),
-            'tanggal' => $request->input('tanggal'),
+            'materi' => $request->input('materi'),
+            'pertanyaan' => $request->input('pertanyaan'),
+            'pilihan_a' => $request->input('pilihan_a'),
+            'pilihan_b' => $request->input('pilihan_b'),
+            'pilihan_c' => $request->input('pilihan_c'),
+            'pilihan_d' => $request->input('pilihan_d'),
+            'pilihan_e' => $request->input('pilihan_e'),
+            'kunci_jawaban' => $request->input('kunci_jawaban'),
         ];
-
-        // Check if a new file is uploaded and is valid
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            // Delete the old file if it exists
-            if ($materi->file) {
-                $oldFilePath = public_path('files/materi/' . $materi->file);
-                if (file_exists($oldFilePath)) {
-                    unlink($oldFilePath);
-                }
-            }
-
-            // Store the new file
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('files/materi/'), $fileName);
-
-            // Add the new file name to the update data
-            $updateData['file'] = $fileName;
-        }
 
         // Update the Materi record with new data
         $materi->update($updateData);
-        // rredirect back
-        return redirect('materi/show/' . $materi_id)->with('success', 'Materi Diubah');
+
+        // Redirect back
+        return redirect()->route('materi.show', ['id' => $materi_id])->with('success', 'Materi Diubah');
     }
 
     public function destroy($id, $materi_id)
@@ -114,18 +121,11 @@ class MateriController extends Controller
         // Find the Materi record by its ID
         $materi = Materi::findOrFail($id);
 
-        // Check if there is an associated file and delete it
-        if ($materi->file) {
-            $filePath = public_path('files/materi/' . $materi->file);
-            if (file_exists($filePath)) {
-                unlink($filePath); // Delete the file
-            }
-        }
         // Delete the Materi record from the database
         $materi->delete();
 
         // Redirect back to the materi list with a success message
-        return redirect('materi/show/' . $materi_id)->with('success', 'Materi berhasil dihapus.');
+        return redirect()->route('materi.show', ['id' => $materi_id])->with('success', 'Materi berhasil dihapus.');
     }
 
 }

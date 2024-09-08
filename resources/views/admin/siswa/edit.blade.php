@@ -53,10 +53,10 @@
                                     @method('put')
                                     @csrf
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">NIS</label>
+                                        <label class="col-sm-2 col-form-label">NIK</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="nis"
-                                                value="{{ $data->nis }}">
+                                            <input type="text" class="form-control" name="nik"
+                                                value="{{ $data->nik }}">
                                         </div>
                                     </div>
                                     <div class="form-group row">

@@ -105,6 +105,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Pendidikan</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="pendidikan">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Alamat</label>
                                         <div class="col-sm-10">
                                             <textarea name="alamat" id="" cols="30" rows="5" class="form-control"></textarea>

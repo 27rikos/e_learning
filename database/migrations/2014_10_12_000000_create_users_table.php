@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('hp');
+            $table->string('email')->unique()->nullable();
+            $table->string('hp')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->enum('role', ['admin', 'guru', 'siswa'])->default('siswa');
-            $table->string('nip')->nullable();
-            $table->string('nis')->nullable();
+            $table->text('nip')->nullable();
+            $table->text('nis')->nullable();
             $table->string('jabatan')->nullable();
             $table->string('jenkel')->nullable();
             $table->string('tempat_lhr')->nullable();
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->text('file')->nullable();
             $table->text('kelas')->nullable();
+            $table->text('pendidikan')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->rememberToken();
             $table->timestamps();

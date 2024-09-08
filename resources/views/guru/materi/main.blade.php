@@ -38,8 +38,9 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ url('materi/create/' . $room->id) }}" class="btn btn-primary btn-sm"><i
-                                        class="ti-plus mr-2"></i>Tambah</a>
+                                <a href="{{ url('materi/create/' . $room->id) }}" class="btn btn-primary btn-sm">
+                                    <i class="ti-plus mr-2"></i>Tambah
+                                </a>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option" style="width: 35px;">
                                         <li class=""><i class="icofont icofont-simple-left"></i></li>
@@ -55,9 +56,14 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Judul</th>
-                                            <th>File</th>
-                                            <th>Tanggal</th>
+                                            <th>Materi</th>
+                                            <th>Pertanyaan</th>
+                                            <th>Pilihan A</th>
+                                            <th>Pilihan B</th>
+                                            <th>Pilihan C</th>
+                                            <th>Pilihan D</th>
+                                            <th>Pilihan E</th>
+                                            <th>Kunci Jawaban</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -65,21 +71,21 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->judul }}</td>
-                                                <td> <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary btn-sm"
-                                                        data-toggle="modal" data-target="#exampleModal{{ $item->id }}">
-                                                        View
-                                                    </button>
-                                                </td>
-                                                <td>{{ $item->tanggal }}</td>
+                                                <td>{!! $item->materi !!}</td>
+                                                <td>{{ $item->pertanyaan }}</td>
+                                                <td>{{ $item->pilihan_a }}</td>
+                                                <td>{{ $item->pilihan_b }}</td>
+                                                <td>{{ $item->pilihan_c }}</td>
+                                                <td>{{ $item->pilihan_d }}</td>
+                                                <td>{{ $item->pilihan_e }}</td>
+                                                <td>{{ $item->kunci_jawaban }}</td>
                                                 <td>
                                                     <div class="d-flex">
                                                         <a href="{{ url("materi/{$item->id}/edit/{$room->id}") }}"
                                                             class="btn btn-info btn-sm">Edit</a>
                                                         &nbsp;
                                                         <form action="{{ url("materi/{$item->id}/destroy/{$room->id}") }}"
-                                                            method="post" class="ms-2" enctype="multipart/form-data">
+                                                            method="post" class="ms-2">
                                                             @csrf
                                                             @method('delete')
                                                             <button type="submit"
@@ -91,31 +97,6 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                @foreach ($data as $item)
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal{{ $item->id }}" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Detail Materi</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <iframe src="{{ asset('files/materi/' . $item->file) }}" frameborder="0"
-                                                        style="width: 100%" height="600px"></iframe>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
                             </div>
                         </div>
                     </div>
